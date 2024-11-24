@@ -1,0 +1,22 @@
+nohup: ignoring input
+/share/disk/hzw/pykt-toolkit-main/pykt/models/evaluate_model.py:264: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at  /opt/conda/conda-bld/pytorch_1659484810403/work/torch/csrc/utils/tensor_new.cpp:201.)
+  curhs = [torch.tensor(curh).float().to(device) for curh in curhs]
+Namespace(bz=256, fusion_type='early_fusion,late_fusion', save_dir='./models/akt_tiaocan_zymath4/akt_tiaocan_zymath4_42_2_0.1_64_256_8_2_0.001_1_1_27a4b984-91dc-4021-880d-b4409d76c21d', use_wandb=0)
+model_name is akt, dataset_name is zymath4
+Read data from processed file: ../data/zymath4/test_sequences.csv_-1.pkl
+file path: ../data/zymath4/test_sequences.csv, qlen: 1758, clen: 1758, rlen: 1758
+Read data from processed file: ../data/zymath4/test_window_sequences.csv_-1.pkl
+file path: ../data/zymath4/test_window_sequences.csv, qlen: 270701, clen: 270701, rlen: 270701
+Read data from processed file: ../data/zymath4/test_question_sequences.csv_-1_qtest.pkl
+file path: ../data/zymath4/test_question_sequences.csv, qlen: 236922, clen: 236922, rlen: 236922
+Read data from processed file: ../data/zymath4/test_question_window_sequences.csv_-1_qtest.pkl
+file path: ../data/zymath4/test_question_window_sequences.csv, qlen: 306774, clen: 306774, rlen: 306774
+has test_question_file!
+Start predicting model: akt, embtype: qid, save_dir: ./models/akt_tiaocan_zymath4/akt_tiaocan_zymath4_42_2_0.1_64_256_8_2_0.001_1_1_27a4b984-91dc-4021-880d-b4409d76c21d, dataset_name: zymath4
+model_config: {'dropout': 0.1, 'd_model': 64, 'd_ff': 256, 'num_attn_heads': 8, 'n_blocks': 2}
+data_config: {'dpath': '../data/zymath4', 'num_q': 15660, 'num_c': 968, 'input_type': ['questions', 'concepts'], 'max_concepts': 6, 'min_seq_len': 3, 'maxlen': 200, 'emb_path': '', 'train_valid_original_file': 'train_valid.csv', 'train_valid_file': 'train_valid_sequences.csv', 'folds': [0, 1, 2, 3, 4], 'test_original_file': 'test.csv', 'test_file': 'test_sequences.csv', 'test_window_file': 'test_window_sequences.csv', 'test_question_file': 'test_question_sequences.csv', 'test_question_window_file': 'test_question_window_sequences.csv', 'train_valid_original_file_quelevel': 'train_valid_quelevel.csv', 'train_valid_file_quelevel': 'train_valid_sequences_quelevel.csv', 'test_file_quelevel': 'test_sequences_quelevel.csv', 'test_window_file_quelevel': 'test_window_sequences_quelevel.csv', 'test_original_file_quelevel': 'test_quelevel.csv', 'dataset_name': 'zymath4'}
+ts.shape: (321920,), ps.shape: (321920,)
+testauc: 0.9505299834689679, testacc: 0.8891090954274354
+ts.shape: (323401,), ps.shape: (323401,)
+testauc: 0.9505299834689679, testacc: 0.8891090954274354, window_testauc: 0.9510332141240276, window_testacc: 0.8896973107689834
+{'testauc': 0.9505299834689679, 'testacc': 0.8891090954274354, 'window_testauc': 0.9510332141240276, 'window_testacc': 0.8896973107689834, 'oriaucconcepts': 0.733389077269208, 'oriauclate_mean': 0.7947433328048934, 'oriauclate_vote': 0.7558802433682179, 'oriauclate_all': 0.7889244240266955, 'oriaucearly_preds': 0.7662012814998882, 'oriaccconcepts': 0.7517344214020114, 'oriacclate_mean': 0.7708008094825094, 'oriacclate_vote': 0.778010985834056, 'oriacclate_all': 0.7632841861809772, 'oriaccearly_preds': 0.7675050592656837, 'windowaucconcepts': 0.7341155699936321, 'windowauclate_mean': 0.7968259959896072, 'windowauclate_vote': 0.7564314308122582, 'windowauclate_all': 0.7909813157408796, 'windowaucearly_preds': 0.7674832485866513, 'windowaccconcepts': 0.7521457434761354, 'windowacclate_mean': 0.7713398178665349, 'windowacclate_vote': 0.7790626902008521, 'windowacclate_all': 0.7633757852065366, 'windowaccearly_preds': 0.7677913159315105}

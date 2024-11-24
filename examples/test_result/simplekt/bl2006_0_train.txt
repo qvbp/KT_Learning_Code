@@ -1,0 +1,9 @@
+Namespace(bz=256, fusion_type='early_fusion,late_fusion', save_dir='./saved_model/bridge2algebra2006_simplekt_qid_saved_model_42_0_0.1_256_64_2_4_0.5_0.5_0.5_50_256_256_4_4_1e-05_0_0', use_wandb=0)
+model_name is simplekt, dataset_name is bridge2algebra2006
+Read data from processed file: ../data/bridge2algebra2006/test_sequences.csv_-1.pkl
+file path: ../data/bridge2algebra2006/test_sequences.csv, qlen: 1885, clen: 1885, rlen: 1885
+Read data from processed file: ../data/bridge2algebra2006/test_window_sequences.csv_-1.pkl
+file path: ../data/bridge2algebra2006/test_window_sequences.csv, qlen: 312091, clen: 312091, rlen: 312091
+Read data from processed file: ../data/bridge2algebra2006/test_question_sequences.csv_-1_qtest.pkl
+file path: ../data/bridge2algebra2006/test_question_sequences.csv, qlen: 4355, clen: 4355, rlen: 4355
+Read data from processed file: ../data/bridge2algebra2006/test_question_window_sequences.csv_-1_qtest.pkl

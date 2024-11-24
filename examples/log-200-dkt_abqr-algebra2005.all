@@ -1,0 +1,20 @@
+wandb: Creating sweep from: all_wandbs/algebra2005_dkt_abqr_qid_0.yaml
+wandb: Creating sweep with ID: e70bqgis
+wandb: View sweep at: https://wandb.ai/gpltqwer-gdufs/tuning-200-dkt_abqr-algebra2005/sweeps/e70bqgis
+wandb: Run sweep agent with: wandb agent gpltqwer-gdufs/tuning-200-dkt_abqr-algebra2005/e70bqgis
+wandb: Creating sweep from: all_wandbs/algebra2005_dkt_abqr_qid_1.yaml
+wandb: Creating sweep with ID: 0xd2qum9
+wandb: View sweep at: https://wandb.ai/gpltqwer-gdufs/tuning-200-dkt_abqr-algebra2005/sweeps/0xd2qum9
+wandb: Run sweep agent with: wandb agent gpltqwer-gdufs/tuning-200-dkt_abqr-algebra2005/0xd2qum9
+wandb: Creating sweep from: all_wandbs/algebra2005_dkt_abqr_qid_2.yaml
+wandb: Creating sweep with ID: 68hb4qu6
+wandb: View sweep at: https://wandb.ai/gpltqwer-gdufs/tuning-200-dkt_abqr-algebra2005/sweeps/68hb4qu6
+wandb: Run sweep agent with: wandb agent gpltqwer-gdufs/tuning-200-dkt_abqr-algebra2005/68hb4qu6
+wandb: Creating sweep from: all_wandbs/algebra2005_dkt_abqr_qid_3.yaml
+wandb: Creating sweep with ID: hkj60d8h
+wandb: View sweep at: https://wandb.ai/gpltqwer-gdufs/tuning-200-dkt_abqr-algebra2005/sweeps/hkj60d8h
+wandb: Run sweep agent with: wandb agent gpltqwer-gdufs/tuning-200-dkt_abqr-algebra2005/hkj60d8h
+wandb: Creating sweep from: all_wandbs/algebra2005_dkt_abqr_qid_4.yaml
+wandb: Creating sweep with ID: 52ascm4n
+wandb: View sweep at: https://wandb.ai/gpltqwer-gdufs/tuning-200-dkt_abqr-algebra2005/sweeps/52ascm4n
+wandb: Run sweep agent with: wandb agent gpltqwer-gdufs/tuning-200-dkt_abqr-algebra2005/52ascm4n

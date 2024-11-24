@@ -1,0 +1,20 @@
+Namespace(bz=256, fusion_type='early_fusion,late_fusion', save_dir='./saved_model/assist2009_simplekt_qid_saved_model_3407_3_0.3_256_64_2_4_0.5_0.5_0.5_50_256_256_4_4_0.0001_0_0', use_wandb=0)
+model_name is simplekt, dataset_name is assist2009
+Read data from processed file: ../data/assist2009/test_sequences.csv_-1.pkl
+file path: ../data/assist2009/test_sequences.csv, qlen: 904, clen: 904, rlen: 904
+Read data from processed file: ../data/assist2009/test_window_sequences.csv_-1.pkl
+file path: ../data/assist2009/test_window_sequences.csv, qlen: 20362, clen: 20362, rlen: 20362
+Read data from processed file: ../data/assist2009/test_question_sequences.csv_-1_qtest.pkl
+file path: ../data/assist2009/test_question_sequences.csv, qlen: 18292, clen: 18292, rlen: 18292
+Read data from processed file: ../data/assist2009/test_question_window_sequences.csv_-1_qtest.pkl
+file path: ../data/assist2009/test_question_window_sequences.csv, qlen: 30610, clen: 30610, rlen: 30610
+has test_question_file!
+Start predicting model: simplekt, embtype: qid, save_dir: ./saved_model/assist2009_simplekt_qid_saved_model_3407_3_0.3_256_64_2_4_0.5_0.5_0.5_50_256_256_4_4_0.0001_0_0, dataset_name: assist2009
+model_config: {'dropout': 0.3, 'final_fc_dim': 256, 'final_fc_dim2': 64, 'num_layers': 2, 'nheads': 4, 'loss1': 0.5, 'loss2': 0.5, 'loss3': 0.5, 'start': 50, 'd_model': 256, 'd_ff': 256, 'num_attn_heads': 4, 'n_blocks': 4}
+data_config: {'dpath': '../data/assist2009', 'num_q': 17737, 'num_c': 123, 'input_type': ['questions', 'concepts'], 'max_concepts': 4, 'min_seq_len': 3, 'maxlen': 200, 'emb_path': '', 'train_valid_original_file': 'train_valid.csv', 'train_valid_file': 'train_valid_sequences.csv', 'folds': [0, 1, 2, 3, 4], 'test_original_file': 'test.csv', 'test_file': 'test_sequences.csv', 'test_window_file': 'test_window_sequences.csv', 'test_question_file': 'test_question_sequences.csv', 'test_question_window_file': 'test_question_window_sequences.csv', 'train_valid_original_file_quelevel': 'train_valid_quelevel.csv', 'train_valid_file_quelevel': 'train_valid_sequences_quelevel.csv', 'test_file_quelevel': 'test_sequences_quelevel.csv', 'test_window_file_quelevel': 'test_window_sequences_quelevel.csv', 'test_original_file_quelevel': 'test_quelevel.csv', 'dataset_name': 'assist2009'}
+model_name: simplekt, emb_type: qid
+ts.shape: (61904,), ps.shape: (61904,)
+testauc: 0.8103134765961626, testacc: 0.758141638666322
+ts.shape: (62040,), ps.shape: (62040,)
+testauc: 0.8103134765961626, testacc: 0.758141638666322, window_testauc: 0.8102499618444006, window_testacc: 0.7587040618955513
+{'testauc': 0.8103134765961626, 'testacc': 0.758141638666322, 'window_testauc': 0.8102499618444006, 'window_testacc': 0.7587040618955513, 'oriaucconcepts': 0.723644166122678, 'oriauclate_mean': 0.738752029461472, 'oriauclate_vote': 0.7360564219864325, 'oriauclate_all': 0.736787148164648, 'oriaucearly_preds': 0.7382920316214512, 'oriaccconcepts': 0.7095242724739128, 'oriacclate_mean': 0.7160217399624909, 'oriacclate_vote': 0.7165958586902438, 'oriacclate_all': 0.7120985953228461, 'oriaccearly_preds': 0.7173039384544724, 'windowaucconcepts': 0.726475768261784, 'windowauclate_mean': 0.7409315014038065, 'windowauclate_vote': 0.7386033334858007, 'windowauclate_all': 0.7392376496892101, 'windowaucearly_preds': 0.7402642426135756, 'windowaccconcepts': 0.7127920881678033, 'windowacclate_mean': 0.7183168505861239, 'windowacclate_vote': 0.7188896101416625, 'windowacclate_all': 0.7151475810454772, 'windowaccearly_preds': 0.7196532895490473}

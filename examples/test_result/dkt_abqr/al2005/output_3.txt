@@ -1,0 +1,51 @@
+nohup: ignoring input
+/mnt/cfs/huangzhiwei/pykt-main-abqr/pykt/models/train_model.py:18: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  matrix = torch.load(pre_load_gcn).to(device)
+/mnt/cfs/huangzhiwei/pykt-main-abqr/pykt/models/dkt_abqr.py:15: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  matrix = torch.load(pre_load_gcn).to(device)
+/mnt/cfs/huangzhiwei/pykt-main-abqr/pykt/models/init_model.py:133: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  net = torch.load(os.path.join(ckpt_path, emb_type+"_model.ckpt"))
+Namespace(bz=128, fusion_type='early_fusion,late_fusion', save_dir='./models/dkt_abqr_tiaocan_algebra2005/algebra2005_dkt_abqr_qid_models/dkt_abqr_tiaocan_algebra2005_3407_3_0.4_256_0.002_1_0', use_wandb=0)
+model_name is dkt_abqr, dataset_name is algebra2005
+Start preprocessing ../data/algebra2005/test_sequences_quelevel.csv fold: _-1...
+interaction_num: 93594
+file path: ../data/algebra2005/test_sequences_quelevel.csv, qlen: 529, clen: 529, rlen: 529
+Start preprocessing ../data/algebra2005/test_window_sequences_quelevel.csv fold: _-1...
+interaction_num: 93595
+file path: ../data/algebra2005/test_window_sequences_quelevel.csv, qlen: 73147, clen: 73147, rlen: 73147
+has test_question_file!
+Start predicting model: dkt_abqr, embtype: qid, save_dir: ./models/dkt_abqr_tiaocan_algebra2005/algebra2005_dkt_abqr_qid_models/dkt_abqr_tiaocan_algebra2005_3407_3_0.4_256_0.002_1_0, dataset_name: algebra2005
+model_config: {'dropout': 0.4, 'emb_size': 256}
+data_config: {'dpath': '../data/algebra2005', 'num_q': 173113, 'num_c': 112, 'input_type': ['questions', 'concepts'], 'max_concepts': 7, 'min_seq_len': 3, 'maxlen': 200, 'emb_path': '', 'train_valid_original_file': 'train_valid.csv', 'train_valid_file': 'train_valid_sequences.csv', 'folds': [0, 1, 2, 3, 4], 'test_original_file': 'test.csv', 'test_file': 'test_sequences.csv', 'test_window_file': 'test_window_sequences.csv', 'test_question_file': 'test_question_sequences.csv', 'test_question_window_file': 'test_question_window_sequences.csv', 'train_valid_original_file_quelevel': 'train_valid_quelevel.csv', 'train_valid_file_quelevel': 'train_valid_sequences_quelevel.csv', 'test_file_quelevel': 'test_sequences_quelevel.csv', 'test_window_file_quelevel': 'test_window_sequences_quelevel.csv', 'test_original_file_quelevel': 'test_quelevel.csv', 'dataset_name': 'algebra2005'}
+Traceback (most recent call last):
+  File "wandb_predict.py", line 141, in <module>
+    main(params)
+  File "wandb_predict.py", line 82, in main
+    testauc, testacc = evaluate(model, test_loader, model_name, save_test_path)
+  File "/mnt/cfs/huangzhiwei/pykt-main-abqr/pykt/models/evaluate_model.py", line 108, in evaluate
+    y, _ = model(q.long(), r.long(), c.long(), qshft.long(), cshft.long())
+  File "/mnt/cfs/anaconda3/envs/pykt-hzw3.8/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/mnt/cfs/anaconda3/envs/pykt-hzw3.8/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/mnt/cfs/huangzhiwei/pykt-main-abqr/pykt/models/dkt_abqr.py", line 81, in forward
+    xemb, next_xemb, contrast_loss = self.abqr(
+  File "/mnt/cfs/anaconda3/envs/pykt-hzw3.8/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/mnt/cfs/anaconda3/envs/pykt-hzw3.8/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/mnt/cfs/huangzhiwei/pykt-main-abqr/pykt/models/ABQR_model.py", line 431, in forward
+    pro_embed, contrast_loss = self.gcl(self.pro_embed, matrix, perb)
+  File "/mnt/cfs/anaconda3/envs/pykt-hzw3.8/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/mnt/cfs/anaconda3/envs/pykt-hzw3.8/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/mnt/cfs/huangzhiwei/pykt-main-abqr/pykt/models/ABQR_model.py", line 302, in forward
+    return (x + self.online_encoder(x, adj)).to(device), torch.tensor(0.0).to(device)
+  File "/mnt/cfs/anaconda3/envs/pykt-hzw3.8/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/mnt/cfs/anaconda3/envs/pykt-hzw3.8/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/mnt/cfs/huangzhiwei/pykt-main-abqr/pykt/models/ABQR_model.py", line 90, in forward
+    x = torch.sparse.mm(adj.float().to(device), x)
+RuntimeError: addmm: Argument #3 (dense): Expected dim 0 size 129263, got 173113
