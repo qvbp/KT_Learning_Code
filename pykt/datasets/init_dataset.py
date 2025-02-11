@@ -1,3 +1,4 @@
+# # 这个用于zymath4测试
 # import os, sys
 # import json
 
@@ -42,9 +43,9 @@
 #         test_dataset = KTQueDataset(os.path.join(data_config["dpath"], data_config["test_file_quelevel"]),
 #                         input_type=data_config["input_type"], folds=[-1], 
 #                         concept_num=data_config['num_c'], max_concepts=data_config['max_concepts'])
-#         test_window_dataset = KTQueDataset(os.path.join(data_config["dpath"], data_config["test_window_file_quelevel"]),
-#                         input_type=data_config["input_type"], folds=[-1], 
-#                         concept_num=data_config['num_c'], max_concepts=data_config['max_concepts'])
+#         # test_window_dataset = KTQueDataset(os.path.join(data_config["dpath"], data_config["test_window_file_quelevel"]),
+#         #                 input_type=data_config["input_type"], folds=[-1], 
+#         #                 concept_num=data_config['num_c'], max_concepts=data_config['max_concepts'])
 #         test_question_dataset = None
 #         test_question_window_dataset= None
 #     elif model_name in ["atdkt"]:
@@ -165,6 +166,8 @@
 #     # # test_window_loader = DataLoader(test_window_dataset, batch_size=batch_size, shuffle=False)
 #     # test_window_loader = None
 #     return train_loader, valid_loader#, test_loader, test_window_loader
+
+
 
 
 import os, sys

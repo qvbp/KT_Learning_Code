@@ -6,23 +6,17 @@ from torch.nn.utils.clip_grad import clip_grad_norm_
 import numpy as np
 from .evaluate_model import evaluate
 from torch.autograd import Variable, grad
-from .atkt import _l2_normalize_adv
 from ..utils.utils import debug_print
 from pykt.config import que_type_models
 import pandas as pd
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# 加载GCN要的技能和问题矩阵
-pre_load_gcn = "../data/bridge2algebra2006/ques_skill_gcn_adj.pt"
-matrix = torch.load(pre_load_gcn).to(device)
-if not matrix.is_sparse:
-    matrix = matrix.to_sparse()
 
 def cal_loss(model, ys, r, rshft, sm, preloss=[]):
     model_name = model.model_name
 
-    if model_name in ["atdkt", "simplekt", "bakt_time", "sparsekt", "fliicbsimplekt"]:
+    if model_name in ["atdkt", "simplekt", "bakt_time", "sparsekt", "fliicbsimplekt", "hcgkt"]:
         y = torch.masked_select(ys[0], sm)
         t = torch.masked_select(rshft, sm)
         # print(f"loss1: {y.shape}")
@@ -68,16 +62,10 @@ def cal_loss(model, ys, r, rshft, sm, preloss=[]):
         t = torch.masked_select(rshft, sm)
         criterion = nn.BCELoss(reduction='none')        
         loss = criterion(y, t).sum()
-    elif model_name in ['dkt_abqr']:
-        y = torch.masked_select(ys[0], sm)
-        t = torch.masked_select(rshft, sm)
-        # criterion = nn.BCELoss(reduction='none') 
-        # loss = criterion(y,t).sum()
-        loss = binary_cross_entropy(y.double(), t.double())
     return loss
 
 
-def model_forward(model, data, opt, emb_size, rel=None):
+def model_forward(model, data, opt, emb_size, dataset_name, step_size=None, step_m=None, grad_clip=None, mm=None, rel=None):
     model_name = model.model_name
     # if model_name in ["dkt_forget", "lpkt"]:
     #     q, c, r, qshft, cshft, rshft, m, sm, d, dshft = data
@@ -112,6 +100,62 @@ def model_forward(model, data, opt, emb_size, rel=None):
     elif model_name in ["simplekt", "sparsekt", "fliicbsimplekt"]:
         y, y2, y3 = model(dcur, train=True)
         ys = [y[:,1:], y2, y3]
+    elif model_name in ["hcgkt"]:
+        
+        step_size = step_size
+        step_m = step_m
+        grad_clip = grad_clip
+        mm = mm
+
+        matrix = None
+        if dataset_name == 'assist2009':
+            pre_load_gcn = "../data/assist2009/ques_skill_gcn_adj.pt"
+            matrix = torch.load(pre_load_gcn)
+            if not matrix.is_sparse:
+                matrix = matrix.to_sparse()
+        elif dataset_name == 'algebra2005':
+            pre_load_gcn = "../data/algebra2005/ques_skill_gcn_adj.pt"
+            matrix = torch.load(pre_load_gcn)
+            if not matrix.is_sparse:
+                matrix = matrix.to_sparse()
+        elif dataset_name == 'bridge2algebra2006':
+            pre_load_gcn = "../data/bridge2algebra2006/ques_skill_gcn_adj.pt"
+            matrix = torch.load(pre_load_gcn)
+            if not matrix.is_sparse:
+                matrix = matrix.to_sparse()
+        elif dataset_name == 'peiyou':
+            pre_load_gcn = "../data/peiyou/ques_skill_gcn_adj.pt"
+            matrix = torch.load(pre_load_gcn)
+            if not matrix.is_sparse:
+                matrix = matrix.to_sparse()
+        elif dataset_name == 'nips_task34':
+            pre_load_gcn = "../data/nips_task34/ques_skill_gcn_adj.pt"
+            matrix = torch.load(pre_load_gcn)
+            if not matrix.is_sparse:
+                matrix = matrix.to_sparse()
+        perturb_shape = (matrix.shape[0], emb_size)
+        perturb = torch.FloatTensor(*perturb_shape).uniform_(-step_size, step_size).to(device)
+        perturb.requires_grad_()
+        y, y2, y3, contrast_loss = model(dcur, train=True, perb=perturb)
+        ys = [y[:,1:], y2, y3]
+        loss = cal_loss(model, ys, r, rshft, sm, preloss) + contrast_loss
+        loss /= step_m
+        opt.zero_grad()
+        for _ in range(step_m - 1):
+            loss.backward()
+            perturb_data = perturb.detach() + step_size * torch.sign(perturb.grad.detach())
+            perturb.data = perturb_data.data
+            perturb.grad[:] = 0
+            y, y2, y3, contrast_loss = model(dcur, train=True, perb=perturb)
+            ys = [y[:,1:], y2, y3]
+            loss = cal_loss(model, ys, r, rshft, sm, preloss) + contrast_loss
+            loss /= step_m
+        
+        loss.backward()
+        nn.utils.clip_grad_norm_(model.parameters(), grad_clip)
+        opt.step()
+        model.sfm_cl.gcl.update_target_network(mm)  
+        return loss
     elif model_name in ["dtransformer"]:
         if model.emb_type == "qid_cl":
             y, loss = model.get_cl_loss(cc.long(), cr.long(), cq.long())  # with cl loss
@@ -130,54 +174,6 @@ def model_forward(model, data, opt, emb_size, rel=None):
         y = (y * one_hot(cshft.long(), model.num_c)).sum(-1)
         # print(f"y.shape: {y.shape}")
         ys.append(y) # first: yshft
-    elif model_name == "dkt_abqr":  # 对抗学习ABQR
-        # def forward(self, last_pro, last_ans, last_skill, next_pro, next_skill, perb=None):
-        step_size = 3e-2
-        step_m = 3
-        grad_clip = 15.0
-        mm = 0.99
-        perturb_shape = (matrix.shape[0], emb_size)
-        perturb = torch.FloatTensor(*perturb_shape).uniform_(-step_size, step_size).to(device)
-        perturb.requires_grad_()
-        y, contrast_loss = model(q.long(), r.long(), c.long(), qshft.long(), cshft.long(), perturb)
-        # print("+"*100)
-        # print(y.shape)
-        # print("+"*100)
-        # y = (y * one_hot(qshft.long(), model.num_q)).sum(-1)
-        ys.append(y)
-        # loss = cal_loss(model, ys, r, rshft, sm, preloss)
-        loss = cal_loss(model, ys, r, rshft, sm, preloss) + contrast_loss
-        # print("+"*100)
-        # print(loss)
-        # print("+"*100)
-        loss /= step_m
-        # print("+"*100)
-        # print(f"loss: {loss}")
-        # print("+"*100)
-        
-        opt.zero_grad()
-
-        for _ in range(step_m - 1):
-            loss.backward()
-            perturb_data = perturb.detach() + step_size * torch.sign(perturb.grad.detach())
-            perturb.data = perturb_data.data
-            perturb.grad[:] = 0
-            # perturb.grad.zero_()
-
-            # predict, _, contrast_loss, c_reg_loss = forward(perturb)  # akt
-            y, contrast_loss = model(q.long(), r.long(), c.long(), qshft.long(), cshft.long(), perturb) # sakt和正常运行
-            ys.clear()
-            ys.append(y)
-            loss = cal_loss(model, ys, r, rshft, sm, preloss) + contrast_loss
-            loss /= step_m
-        
-        loss.backward()
-        nn.utils.clip_grad_norm_(model.parameters(), grad_clip)
-        opt.step()
-
-        model.abqr.gcl.update_target_network(mm)  # EMA更新对抗学习的参数
-
-        return loss
     elif model_name == "dkt+":
         y = model(c.long(), r.long())
         y_next = (y * one_hot(cshft.long(), model.num_c)).sum(-1)
@@ -238,7 +234,7 @@ def model_forward(model, data, opt, emb_size, rel=None):
     return loss
     
 
-def train_model(model, train_loader, valid_loader, num_epochs, opt, ckpt_path, test_loader=None, test_window_loader=None, save_model=False, emb_size=128, data_config=None, fold=None):
+def train_model(model, train_loader, valid_loader, num_epochs, opt, ckpt_path, test_loader=None, test_window_loader=None, save_model=False, emb_size=128, dataset_name="assist2009", step_size=None, step_m=None, grad_clip=None, mm=None, data_config=None, fold=None):
     max_auc, best_epoch = 0, -1
     train_step = 0
 
@@ -261,23 +257,23 @@ def train_model(model, train_loader, valid_loader, num_epochs, opt, ckpt_path, t
         loss_mean = []
         for data in train_loader:
             train_step+=1
-            if model.model_name in que_type_models and model.model_name not in ["lpkt", "rkt", "dkt_abqr"]:
+            if model.model_name in que_type_models and model.model_name not in ["lpkt", "rkt"]:
                 model.model.train()
             else:
                 model.train()
             if model.model_name=='rkt':
                 loss = model_forward(model, data, rel)
             else:
-                loss = model_forward(model, data, opt, emb_size)
+                loss = model_forward(model, data, opt, emb_size, dataset_name, step_size, step_m, grad_clip, mm)
                 # loss = model_forward(model, data, opt)
-            if model.model_name not in ['dkt_abqr']:
+            if model.model_name not in ['hcgkt']:
                 opt.zero_grad()
                 loss.backward()#compute gradients
             if model.model_name == "rkt":
                 clip_grad_norm_(model.parameters(), model.grad_clip)
             if model.model_name == "dtransformer":
                 torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-            if model.model_name not in ['dkt_abqr']:
+            if model.model_name not in ["hcgkt"]:
                 opt.step()#update model’s parameters
             loss_mean.append(loss.detach().cpu().numpy())
             if model.model_name == "gkt" and train_step%10==0:

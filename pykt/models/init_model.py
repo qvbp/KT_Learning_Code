@@ -2,36 +2,9 @@ import torch
 import numpy as np
 import os
 
-from .dkt import DKT
-from .dkt_plus import DKTPlus
-from .dkvmn import DKVMN
-from .deep_irt import DeepIRT
-from .sakt import SAKT
-from .saint import SAINT
-from .kqn import KQN
-from .atkt import ATKT
-from .dkt_forget import DKTForget
-from .akt import AKT
-from .cakt import CAKT
-from .gkt import GKT
-from .gkt_utils import get_gkt_graph
-from .lpkt import LPKT
-from .lpkt_utils import generate_qmatrix
-from .skvmn import SKVMN
-from .hawkes import HawkesKT
-from .iekt import IEKT
-from .atdkt import ATDKT
-from .simplekt import simpleKT
-from .bakt_time import BAKTTime
-from .qdkt import QDKT
-from .qikt import QIKT
-from .dimkt import DIMKT
-from .sparsekt import sparseKT
-from .rkt import RKT
-from .folibikt import folibiKT
-from .dtransformer import DTransformer
-from .fliicbsimplekt import fliicbsimpleKT
-from .dkt_abqr import DKT_ABQR
+
+from .hcgkt import HCGKT
+
 
 device = "cpu" if not torch.cuda.is_available() else "cuda"
 
@@ -81,8 +54,6 @@ def init_model(model_name, model_config, data_config, emb_type):
             q_matrix = generate_qmatrix(data_config)
         q_matrix = torch.tensor(q_matrix).float().to(device)
         model = LPKT(data_config["num_at"], data_config["num_it"], data_config["num_q"], data_config["num_c"], **model_config, q_matrix=q_matrix, emb_type=emb_type, emb_path=data_config["emb_path"]).to(device)
-    elif model_name == "dkt_abqr":
-        model = DKT_ABQR(data_config["num_q"], data_config["num_c"], **model_config, emb_type=emb_type, emb_path=data_config["emb_path"])
     elif model_name == "skvmn":
         model = SKVMN(data_config["num_c"], **model_config, emb_type=emb_type, emb_path=data_config["emb_path"]).to(device)   
     elif model_name == "hawkes":
@@ -112,6 +83,8 @@ def init_model(model_name, model_config, data_config, emb_type):
         model = BAKTTime(data_config["num_c"], data_config["num_q"], data_config["num_rgap"], data_config["num_sgap"], data_config["num_pcount"], **model_config, emb_type=emb_type, emb_path=data_config["emb_path"]).to(device)
     elif model_name == "simplekt":
         model = simpleKT(data_config["num_c"], data_config["num_q"], **model_config, emb_type=emb_type, emb_path=data_config["emb_path"]).to(device)
+    elif model_name == "hcgkt":
+        model = HCGKT(data_config["num_c"], data_config["num_q"], **model_config, emb_type=emb_type, emb_path=data_config["emb_path"]).to(device)
     elif model_name == "fliicbsimplekt":
         model = fliicbsimpleKT(data_config["num_c"], data_config["num_q"], **model_config, emb_type=emb_type, emb_path=data_config["emb_path"]).to(device)
     elif model_name == "dimkt":

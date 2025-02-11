@@ -53,7 +53,7 @@ import json
 import torch
 
 # 加载映射 JSON 文件
-json_file_path = './bridge2algebra2006/keyid2idx.json'  # 替换为你的 JSON 文件路径
+json_file_path = './peiyou/keyid2idx.json'  # 替换为你的 JSON 文件路径
 with open(json_file_path, 'r') as file:
     mapping = json.load(file)
 
@@ -61,7 +61,7 @@ ques_mapping = mapping['questions']  # 问题的映射
 skill_mapping = mapping['concepts']    # 技能的映射
 
 # 加载 CSV 文件
-csv_file_path = './bridge2algebra2006/ques_skills.csv'  # 替换为你的 CSV 文件路径
+csv_file_path = './peiyou/ques_skills.csv'  # 替换为你的 CSV 文件路径
 df = pd.read_csv(csv_file_path)
 
 # 2. 获取唯一的 ques（问题），统计问题的数量
@@ -132,7 +132,7 @@ adj_matrix_normalized = row_normalize(adj_matrix)
 
 # 稀疏矩阵转换 && 保存稀疏矩阵
 adj_tensor = torch.tensor(adj_matrix_normalized, dtype=torch.float32).to_sparse()
-torch.save(adj_tensor, './bridge2algebra2006/ques_skill_gcn_adj.pt')
+torch.save(adj_tensor, './peiyou/ques_skill_gcn_adj.pt')
 
 # 获取稀疏张量的非零值
 non_zero_values = adj_tensor.values()

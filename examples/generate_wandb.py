@@ -8,9 +8,9 @@ def str2bool(str):
 
 # 生成启动sweep的脚本
 def main(params):
-    src_dir, project_name, dataset_names, model_names, folds, save_dir_suffix, all_dir, launch_file, generate_all, emb_types = params["src_dir"], params["project_name"], params["dataset_names"], \
-    params["model_names"], params["folds"], params["save_dir_suffix"], params["all_dir"], params["launch_file"], params["generate_all"], params["emb_types"]
-    emb_types = [x for x in emb_types.split(",")]
+    src_dir, project_name, dataset_names, model_names, folds, save_dir_suffix, all_dir, launch_file, generate_all, emb_type = params["src_dir"], params["project_name"], params["dataset_names"], \
+    params["model_names"], params["folds"], params["save_dir_suffix"], params["all_dir"], params["launch_file"], params["generate_all"], params["emb_type"]
+    emb_type = [x for x in emb_type.split(",")]
     if not os.path.exists(all_dir):
         os.makedirs(all_dir)
     with open("../configs/wandb.json") as fin,\
@@ -24,7 +24,7 @@ def main(params):
         for dataset_name in dataset_names.split(","):
             files = os.listdir(src_dir)
             for m in model_names.split(","):
-                for _type in emb_types:
+                for _type in emb_type:
                     
                     for fold in folds.split(","):
                         # _type = [str(k) for k in _type]
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     parser.add_argument("--project_name", type=str, default="kt_toolkits")
     parser.add_argument("--dataset_names", type=str, default="assist2015")
     parser.add_argument("--model_names", type=str, default="dkt,dkt+,dkt_forget,kqn,atktfix,dkvmn,sakt,saint,akt,gkt")
-    parser.add_argument("--emb_types", type=str, default="qid")
+    parser.add_argument("--emb_type", type=str, default="qid")
     parser.add_argument("--folds", type=str, default="0,1,2,3,4")
     parser.add_argument("--batch_size", type=int, default=128)
     parser.add_argument("--save_dir_suffix", type=str, default="")

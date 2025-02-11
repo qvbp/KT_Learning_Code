@@ -1,8 +1,8 @@
 import csv
 
 # 输入文件路径和输出文件路径
-input_file = './bridge2algebra2006/data.txt'  # 替换为您的输入文件路径
-output_file = './bridge2algebra2006/ques_skills.csv'
+input_file = './peiyou/data.txt'  # 替换为您的输入文件路径
+output_file = './peiyou/ques_skills.csv'
 
 # 读取文件并处理数据
 def parse_file(input_file, output_file):

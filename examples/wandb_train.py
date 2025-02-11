@@ -41,7 +41,7 @@ def main(params):
         train_config = config["train_config"]
         if model_name in ["dkvmn","deep_irt", "sakt", "saint","saint++", "akt", "cakt", "folibikt", "atkt", "lpkt", "skvmn", "dimkt"]:
             train_config["batch_size"] = 64 ## because of OOM
-        if model_name in ["simplekt", "bakt_time", "sparsekt"]:
+        if model_name in ["simplekt", "bakt_time", "sparsekt", "hcgkt"]:
             train_config["batch_size"] = 64 ## because of OOM
         if model_name in ["gkt"]:
             train_config["batch_size"] = 16 
@@ -98,7 +98,7 @@ def main(params):
     for remove_item in ['use_wandb','learning_rate','add_uuid','l2']:
         if remove_item in model_config:
             del model_config[remove_item]
-    if model_name in ["saint","saint++", "sakt", "atdkt", "simplekt", "bakt_time","folibikt"]:
+    if model_name in ["saint","saint++", "sakt", "atdkt", "simplekt", "bakt_time","folibikt", "hcgkt"]:
         model_config["seq_len"] = seq_len
         
     debug_print(text = "init_model",fuc_name="main")
@@ -135,13 +135,29 @@ def main(params):
     
     debug_print(text = "train model",fuc_name="main")
     
-    emb_size = params['emb_size']
+    if model_name in ["pointkt"]:
+        emb_size = params['emb_size']
+        dataset_name = params['dataset_name']
+    if model_name in ["simplekt", "hcgkt", "akt"]:
+        emb_size = params['d_model']
+        dataset_name = params['dataset_name']
+
+    if model_name in ['hcgkt']:  # 对抗学习的超参数获取
+        step_size = params['step_size']
+        step_m = params['step_m']
+        grad_clip = params['grad_clip']
+        mm = params['mm']
+
     if model_name == "rkt":
         testauc, testacc, window_testauc, window_testacc, validauc, validacc, best_epoch = \
             train_model(model, train_loader, valid_loader, num_epochs, opt, ckpt_path, None, None, save_model, data_config[dataset_name], fold)
     else:
         #                                                                               def train_model(model, train_loader, valid_loader, num_epochs, opt, ckpt_path, test_loader=None, test_window_loader=None, save_model=False, emb_size=128, data_config=None, fold=None):
-        testauc, testacc, window_testauc, window_testacc, validauc, validacc, best_epoch = train_model(model, train_loader, valid_loader, num_epochs, opt, ckpt_path, None, None, save_model, emb_size)
+        # 判断是否是hcgkt模型，如果是则传入对抗学习的超参数
+        if model_name in ['hcgkt']:
+            testauc, testacc, window_testauc, window_testacc, validauc, validacc, best_epoch = train_model(model, train_loader, valid_loader, num_epochs, opt, ckpt_path, None, None, save_model, emb_size, dataset_name, step_size, step_m, grad_clip, mm)
+        else:
+            testauc, testacc, window_testauc, window_testacc, validauc, validacc, best_epoch = train_model(model, train_loader, valid_loader, num_epochs, opt, ckpt_path, None, None, save_model, emb_size, dataset_name)
         # testauc, testacc, window_testauc, window_testacc, validauc, validacc, best_epoch = train_model(model, train_loader, valid_loader, num_epochs, opt, ckpt_path, None, None, save_model)
 
     if save_model:

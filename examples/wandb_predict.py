@@ -131,8 +131,7 @@ def main(params):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--bz", type=int, default=128)
-    parser.add_argument("--save_dir", type=str, default="/home/hzw/HZW/pykt-toolkit-main-abqr/examples/saved_model/dkt_abqr/assist2009_dkt_abqr_qid_saved_model/dkt_abqr_3047_0_0.4_128_0.002_0_0")
-    parser.add_argument("--fusion_type", type=str, default="early_fusion,late_fusion")
+    parser.add_argument("--save_dir", type=str, default="")
     parser.add_argument("--use_wandb", type=int, default=0)
 
     args = parser.parse_args()
